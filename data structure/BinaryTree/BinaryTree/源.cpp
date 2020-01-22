@@ -122,7 +122,7 @@ Node** NewBinaryTree() {
 	root[2]->right = root[4];
 	return root;
 }
-int main() {
-	Node** root = NewBinaryTree();
-	PostOrder(*root);
-}
+//int main() {
+//	Node** root = NewBinaryTree();
+//	PostOrder(*root);
+//}
