@@ -1,14 +1,132 @@
-int Partition(int *arr, int start, int end, int pivotIndex) {
-	if(arr == NULL || start > end) return -1;
-	int pivot = arr[pivotIndex];
-	Swap(arr, end, pivotIndex);  // æŠŠpivotæ”¾åœ¨æœ«å°¾
-	int startIndex = start;      // åˆ†ç•Œåæ ‡åˆå§‹åŒ–
-	for (int i = start; i < end; i++) {
-		if (arr[i] < pivot) {
-			Swap(arr, i, startIndex);
-			startIndex++;
-		}
-	}
-	Swap(arr, end, startIndex);
-	return startIndex;
+/*
+¶ÔÓÚÒ»¸öintÊı×é£¬Çë±àĞ´Ò»¸ö¹é²¢ÅÅĞòËã·¨£¬¶ÔÊı×éÔªËØÅÅĞò¡£
+¸ø¶¨Ò»¸öintÊı×éA¼°Êı×éµÄ´óĞ¡n£¬Çë·µ»ØÅÅĞòºóµÄÊı×é¡£
+²âÊÔÑùÀı£º
+[1,2,3,5,2,3],6
+[1,2,2,3,3,5]
+*/
+
+#include <iostream>
+#include <cstdlib>
+#include <ctime>
+#include <stack>
+
+using namespace std;
+
+/*»®·Öº¯Êı*/
+int partition(int *A, int left, int right);
+/*µİ¹éÊµÏÖ*/
+void QuickSort(int *A, int left, int right);
+/*·Çµİ¹éÊµÏÖ*/
+void QuickSort2(int *A, int left, int right);
+
+void swap(int &a, int &b)
+{
+	int tmp = a;
+	a = b;
+	b = a;
 }
+
+int partition(int *A, int left, int right)
+{
+	///*Ëæ»úÑ¡Ôñ*/
+	srand((int)time(NULL));
+	int pos = left + (rand() % (right - left + 1));
+	///*½»»»*/
+	swap(A[pos], A[right]);
+
+	/*ÉèÖÃ×ó²àĞ¡ÓÚµÈÓÚÇø¼ä{}£¬³õÊ¼»¯Îªleft×ó²à*/
+	int lessPos = left - 1;
+	int pivot = A[right];
+	for (int i = left; i < right; ++i)
+	{
+		if (A[i] <= pivot)
+		{
+			/*½»»»£¬²¢Ğ¡ÓÚµÈÓÚÇø¼äÎ²²¿ÓÒÒÆ*/
+			++lessPos;
+			swap(A[lessPos], A[i]);
+		}//if
+	}
+	swap(A[lessPos + 1], A[right]);
+	return lessPos + 1;
+}
+
+
+/*¿ìËÙÅÅĞò*/
+int *QuickSort(int *A, int n)
+{
+	if (A == NULL || n <= 0)
+		return A;
+	QuickSort2(A, 0, n-1);
+	return A;
+}
+
+
+/*¿ìËÙÅÅĞòµÄµİ¹éÊµÏÖ*/
+void QuickSort(int *A, int left, int right)
+{
+	if (left < right)
+	{
+		int pos = partition(A, left, right);
+		QuickSort(A, left, pos - 1);
+		QuickSort(A, pos + 1, right);
+	}//if
+}
+
+/*¿ìËÙÅÅĞòµÄ·Çµİ¹éÊµÏÖ*/
+void QuickSort2(int *A, int left, int right)
+{
+	stack<int> st;
+	if (left < right)
+	{
+		int mid = partition(A, left, right);
+		if (left < mid - 1)
+		{
+			st.push(left);
+			st.push(mid - 1);
+		}//if
+
+		if (right > mid + 1)
+		{
+			st.push(mid + 1);
+			st.push(right);
+		}//if
+
+		/*ÆäÊµ¾ÍÊÇÓÃÕ»±£´æÃ¿Ò»¸ö´ıÅÅĞò×Ó´®µÄÊ×Î²ÔªËØÏÂ±ê£¬
+		ÏÂÒ»´ÎwhileÑ­»·Ê±È¡³öÕâ¸ö·¶Î§£¬¶ÔÕâ¶Î×ÓĞòÁĞ½øĞĞpartition²Ù×÷*/
+		while (!st.empty())
+		{
+			int rhs = st.top();
+			st.pop();
+			int lhs = st.top();
+			st.pop();
+
+			mid = partition(A, lhs, rhs);
+
+			if (lhs < mid - 1)
+			{
+				st.push(lhs);
+				st.push(mid - 1);
+			}//if
+
+			if (rhs > mid + 1)
+			{
+				st.push(mid + 1);
+				st.push(rhs);
+			}//if
+		}//while
+	}//if
+
+}
+//
+//int main()
+//{
+//	int arr[] = { 1, 2, 3, 5, 2, 3 };
+//	QuickSort(arr, 6);
+//
+//	for (int i = 0; i < 6; ++i)
+//		cout << arr[i] << "\t";
+//	cout << endl;
+//	system("pause");
+//	return 0;
+//}
