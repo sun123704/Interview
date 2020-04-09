@@ -6,23 +6,23 @@
 [1,2,2,3,3,5]
 */
 
+// 归并排序：分而治之的策略
+// ①分：问题分成小问题，递归求解；
+// ②治：将小问题的答案合并在一起
+
 #include <iostream>
-#include <cstdlib>
-#include <time.h>
 
 using namespace std;
 
-int* MergeSort(int *A, int n)
-{
+int* MergeSort(int *A, int n) {
 	if (A == NULL || n <= 0)
 		return A;
 
 	MergeSort(A, 0, n - 1);
 	return A;
 }
-
-void MergeSort(int *A, int left, int right)
-{
+// 分：
+void MergeSort(int *A, int left, int right) {
 	if (left >= right)
 		return;
 
@@ -32,44 +32,39 @@ void MergeSort(int *A, int left, int right)
 
 	Merge(A, left, mid, right);
 }
-
-/*将排序后的left~mid与mid+1~right两个子序列合并*/
-void Merge(int *A, int left, int mid, int right)
-{
+// 治：将排序后的left~mid与mid+1~right两个子序列合并
+void Merge(int *A, int left, int mid, int right) {
 	int *tmp = new int[right - left + 1];
 	/*合并排序后的元素到tmp临时数组*/
 	int lhs = left, rhs = mid + 1, k = 0;
-	while (lhs <= mid && rhs <= right)
-	{
+	while (lhs <= mid && rhs <= right) {
 		if (A[lhs] <= A[rhs])
 			tmp[k++] = A[lhs++];
 		else
 			tmp[k++] = A[rhs++];
-	}//while
+	} //while
 
 	/*直接拷贝剩余元素*/
-	while (lhs <= mid)
-	{
+	while (lhs <= mid) {
 		tmp[k++] = A[lhs++];
-	}//while
+	} //while
 
-	while (rhs <= right)
-	{
+	while (rhs <= right) {
 		tmp[k++] = A[rhs++];
-	}//while
+	} //while
 
 	/*拷贝临时数组数据到原数组*/
-	for (int i = left; i <= right; ++i)
-	{
+	for (int i = left; i <= right; ++i) {
 		A[i] = tmp[i - left];
-	}//for
+	} //for
 
 	delete[]tmp;
 }
 
+
+
 /*=====================================================*/
 /*非递归实现归并排序*/
-
 void Merge(int *arr3, int *arr1, int begin, int m, int end) {
 	int i = begin, j = m + 1, k, h;
 	for (k = i; i <= m && j <= end; k++) {
